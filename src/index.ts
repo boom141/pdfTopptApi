@@ -1,12 +1,15 @@
+import 'dotenv/config'
 import { serve } from '@hono/node-server'
 import { Hono } from 'hono'
+import { cors } from 'hono/cors'
+
 
 import { getElements } from './services/elements.service'
 import { exportImages } from './services/imageHosting.service'
-import { url } from 'inspector'
-import { json } from 'stream/consumers'
 
-const app = new Hono()
+
+const app = new Hono().basePath(process.env.BASE_API_PATH as string)
+app.use(cors())
 
 app.get('/', (c) => {
   return c.text('Hello Hono!')
@@ -16,13 +19,14 @@ app.post('/upload', async (c) => {
   const body = await c.req.parseBody()
   const file = body.file
 
+  console.log(file)
+  
   const fileBuffer = file instanceof File ? await file.arrayBuffer() : false
 
   const pdfImages = await exportImages(fileBuffer, 'src/temp')
 
   return c.json({ data: pdfImages })
 })
-
 
 app.get('/elements', async (c) => {
   try {
@@ -31,10 +35,9 @@ app.get('/elements', async (c) => {
   } catch (e) {
     return c.json(e)
   }
-
 })
 
-
+app.get('/sample', c => c.text('Sample'))
 
 const port = 5000
 console.log(`Server is running on port ${port}`)
