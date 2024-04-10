@@ -6,8 +6,8 @@ import { cors } from 'hono/cors'
 
 import { getElements } from './services/elements.service'
 import { exportImages } from './services/imageHosting.service'
-import { pixabayArrayFormatter, uploadArrayFormatter } from './helper/sliderFormatter.helper'
-import { apiErrorResponse, apiSuccessResponse } from './helper/response.helper'
+import { pixabayArrayFormatter, uploadArrayFormatter } from './helpers/sliderFormatter.helper'
+import { apiErrorResponse, apiSuccessResponse } from './helpers/response.helper'
 
 
 const app = new Hono().basePath(process.env.BASE_API_PATH as string)
