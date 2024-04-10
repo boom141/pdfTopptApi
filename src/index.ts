@@ -6,6 +6,7 @@ import { cors } from 'hono/cors'
 
 import { getElements } from './services/elements.service'
 import { exportImages } from './services/imageHosting.service'
+import { sliderFormatter } from './helper/sliderFormatter.helper'
 
 
 const app = new Hono().basePath(process.env.BASE_API_PATH as string)
@@ -16,16 +17,17 @@ app.get('/', (c) => {
 })
 
 app.post('/upload', async (c) => {
-  const body = await c.req.parseBody()
-  const file = body.file
+  try{
+    const body = await c.req.parseBody()
+    const file = body.file
+    const fileBuffer = file instanceof File ? await file.arrayBuffer() : false
+    const pdfImages = await exportImages(fileBuffer, 'src/temp')
+    return c.json({ code: 200, data: sliderFormatter(pdfImages) })
 
-  console.log(file)
-  
-  const fileBuffer = file instanceof File ? await file.arrayBuffer() : false
+  }catch (e){
 
-  const pdfImages = await exportImages(fileBuffer, 'src/temp')
-
-  return c.json({ data: pdfImages })
+    return c.json({code: 500})
+  }
 })
 
 app.get('/elements', async (c) => {
