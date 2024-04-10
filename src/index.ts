@@ -6,7 +6,8 @@ import { cors } from 'hono/cors'
 
 import { getElements } from './services/elements.service'
 import { exportImages } from './services/imageHosting.service'
-import { uploadObjectFormatter } from './helper/sliderFormatter.helper'
+import { pixabayArrayFormatter, uploadArrayFormatter } from './helper/sliderFormatter.helper'
+import { apiErrorResponse, apiSuccessResponse } from './helper/response.helper'
 
 
 const app = new Hono().basePath(process.env.BASE_API_PATH as string)
@@ -22,20 +23,28 @@ app.post('/upload', async (c) => {
     const file = body.file
     const fileBuffer = file instanceof File ? await file.arrayBuffer() : false
     const pdfImages = await exportImages(fileBuffer, 'src/temp')
-    return c.json({ code: 200, data: uploadObjectFormatter(pdfImages) })
 
-  }catch (e){
+    return c.json(apiSuccessResponse(
+      uploadArrayFormatter(pdfImages), 
+      'upload complete', 
+      ))
 
-    return c.json({code: 500})
+  }catch (e:any){
+    return c.json(apiErrorResponse(e.message))
   }
 })
 
 app.get('/elements', async (c) => {
   try {
     let response = await getElements(c.req.query())
-    return c.json(response)
-  } catch (e) {
-    return c.json(e)
+   
+    return c.json(apiSuccessResponse(
+      pixabayArrayFormatter(response),
+      'elements retrieved sucessfully'
+    ))
+
+  } catch (e:any) {
+    return c.json(apiErrorResponse(e.message))
   }
 })
 
