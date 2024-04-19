@@ -9,7 +9,8 @@
     "hono": "^4.1.5",
     "imagekit": "^5.0.0",
     "pdf-export-images": "^1.2.0",
-    "pexels": "^1.4.0"
+    "pexels": "^1.4.0",
+    "pptxgenjs": "^3.12.0"
   },
   "devDependencies": {
     "@types/node": "^20.11.17",

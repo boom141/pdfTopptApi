@@ -17,7 +17,7 @@ export const uploadArrayFormatter = (pdfContent: any): Array<object> => {
 
                 images.push(imageData);
             }
-            newData.push({page: pageData.page, images: images})
+            newData.push({category: 'page' + pageData.page, images: images})
         }
     }
 
@@ -43,7 +43,7 @@ export const pixabayArrayFormatter = (imageList: any): Array<object> => {
         }
 
         for(let type in images){
-            newData.push({type: type, images: images[type]})
+            newData.push({category: type, images: images[type]})
         }
     }
     
