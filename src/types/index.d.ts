@@ -16,7 +16,7 @@ declare namespace SlideData{
         angle: number
     }
 
-    export interface ImageProps{
+    export interface ImageProps extends SlideObject {
         src: string,
         left: number,
         top: number,
@@ -28,7 +28,9 @@ declare namespace SlideData{
     }
 
     export interface Slide {
-        slide: number,
+        number: number,
+        height: number,
+        width: number,
         backgroundColor: string,
         objects: Array<TextProps> | Array<ImageProps>,
         thumbnail: string | null

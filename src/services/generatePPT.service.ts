@@ -1,30 +1,25 @@
 import pptxgen from "pptxgenjs";
 import  SlideData  from "../types";
+import { convertImageProps, convertTextProps } from "../helpers/convertObjectProps.helper";
 
-const addTextToSlide = (slide: pptxgen.Slide, textList: Array<SlideData.TextProps>) => {
-    textList.forEach( text => {
-        let convertedProps: pptxgen.TextPropsOptions = {
-            fontFace: text.fontFamily,
-            bold: text.fontWeight === 'bold' ? true : false,
-            fontSize: text.fontSize,
-            color: text.fill.split('#')[1],
-            y: text.top,
-            x: text.left,
-            rotate: text.angle
-        }
 
-        slide.addText(text.text, convertedProps)
+export const exportPPT = (slidesData: Array<SlideData.Slide>) => {
+    let newPpt = new pptxgen();
+    
+    slidesData.forEach( slide =>{
+        let newSlide = newPpt.addSlide();
+        newSlide.background = {color: slide.backgroundColor.split('#')[1]}
+        slide.objects.forEach( object => {
+            if('text' in object){
+                let textData = convertTextProps(object, slide.height, slide.width)
+                newSlide.addText(object.text, textData)
+            }else{
+                let imageData = convertImageProps(object, slide.height, slide.width)
+                newSlide.addImage(imageData)
+            }
+        })
     })
 
-    return slide
-}
-
-export const exportPPT = (slideData: Array<SlideData.Slide>) => {
-    let newPpt = new pptxgen();
-
-    let slide = newPpt.addSlide();
-
-    // 4. Save the Presentation
     newPpt.writeFile({fileName: 'test_presentation.pptx'});
 }
 

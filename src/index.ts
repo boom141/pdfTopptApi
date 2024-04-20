@@ -8,7 +8,7 @@ import { getElements } from './services/elements.service'
 import { exportImages } from './services/imageHosting.service'
 import { pixabayArrayFormatter, uploadArrayFormatter } from './helpers/sliderFormatter.helper'
 import { apiErrorResponse, apiSuccessResponse } from './helpers/response.helper'
-
+import { exportPPT } from './services/generatePPT.service'
 
 const app = new Hono().basePath(process.env.BASE_API_PATH as string)
 app.use(cors())
@@ -23,6 +23,8 @@ app.post('/upload', async (c) => {
     const file = body.file
     const fileBuffer = file instanceof File ? await file.arrayBuffer() : false
     const pdfImages = await exportImages(fileBuffer, 'src/temp')
+    
+    console.log(body)
 
     return c.json(apiSuccessResponse(
       uploadArrayFormatter(pdfImages), 
@@ -46,6 +48,12 @@ app.get('/elements', async (c) => {
   } catch (e:any) {
     return c.json(apiErrorResponse(e.message))
   }
+})
+
+app.post('/export', async(c) => {
+  let requestData = await c.req.json()
+  exportPPT(requestData.data)
+  return c.json(apiSuccessResponse([], 'sucess'))
 })
 
 app.get('/sample', c => c.text('Sample'))
