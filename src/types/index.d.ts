@@ -27,12 +27,14 @@ declare namespace SlideData{
         angle: number
     }
 
+    export type ObjectsType = TextProps | ImageProps 
+
     export interface Slide {
         number: number,
         height: number,
         width: number,
         backgroundColor: string,
-        objects: Array<TextProps> | Array<ImageProps>,
+        objects: Array<ObjectsType>,
         thumbnail: string | null
     }
 }
