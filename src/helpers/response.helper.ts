@@ -1,5 +1,6 @@
+import { ResponseHelper } from "../types"
 
-export const apiSuccessResponse = (data: Array<any>, message: string) =>{
+export const apiSuccessResponse = (data: ResponseHelper.ResposeDataType, message: string): ResponseHelper.RequestResponse =>{
     const response = {
         success: true,
         code: 200,
@@ -10,7 +11,7 @@ export const apiSuccessResponse = (data: Array<any>, message: string) =>{
     return response
 }   
 
-export const apiErrorResponse = (message: string) =>{
+export const apiErrorResponse = (message: string): ResponseHelper.RequestResponse =>{
     const response = {
         success: false,
         code: 500,

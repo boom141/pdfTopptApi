@@ -1,6 +1,6 @@
 import pptxgen from "pptxgenjs";
-import  SlideData  from "../types";
-import { convertImageProps, convertTextProps } from "../helpers/convertObjectProps.helper";
+import  { SlideData }  from "../types";
+import { convertImageProps, convertTextProps } from "../helpers/convert-object-props.helper";
 
 
 export const exportPPT = (slidesData: Array<SlideData.Slide>) => {

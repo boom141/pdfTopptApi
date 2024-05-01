@@ -1,7 +1,7 @@
 {
   "type": "module",
   "scripts": {
-    "dev": "tsx --watch src/index.ts"
+    "start:dev": "tsx --watch src/index.ts"
   },
   "dependencies": {
     "@hono/node-server": "^1.9.0",

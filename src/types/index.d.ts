@@ -1,4 +1,4 @@
-declare namespace SlideData{
+export declare namespace SlideData{
     export interface SlideObject{
         id: number,
         type: string
@@ -39,4 +39,21 @@ declare namespace SlideData{
     }
 }
 
-export default SlideData
+export declare namespace ResponseHelper{
+    export type ResposeDataType = Array<any> | object | string | number
+
+    export interface SuccessResponse {
+        success: boolean,
+        code: number,
+        data: ResposeDataType,
+        message: string
+    }
+
+    export interface ErrorResponse {
+        success: boolean,
+        code: number,
+        message: string
+    }
+
+    export type RequestResponse = SuccessResponse | ErrorResponse | any
+}
