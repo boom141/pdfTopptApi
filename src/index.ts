@@ -15,25 +15,7 @@ app.get('/', (c) => {
 })
 
 app.post('/fileInfo',  appController.fileInfo)
-
-// app.post('/upload', async (c) => {
-//   try{
-//     const body = await c.req.parseBody()
-//     const file = body.file
-//     const fileBuffer = file instanceof File ? await file.arrayBuffer() : false
-//     const pdfImages = await exportImages(fileBuffer, 'src/data/temp')
-    
-//     console.log(body)
-
-//     return c.json(apiSuccessResponse(
-//       uploadArrayFormatter(pdfImages), 
-//       'upload complete', 
-//       ))
-
-//   }catch (e:any){
-//     return c.json(apiErrorResponse(e.message))
-//   }
-// })
+app.post('/extractContent', appController.extractFromFile)
 
 // app.get('/elements', async (c) => {
 //   try {
