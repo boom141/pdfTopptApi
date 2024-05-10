@@ -57,3 +57,27 @@ export declare namespace ResponseHelper{
 
     export type RequestResponse = SuccessResponse | ErrorResponse | any
 }
+
+export declare namespace Parsing{
+    export interface HostedImage {
+        name: string
+        url: string
+        thumbnailUrl: string
+    }
+
+    export interface ExtractedImages{
+        page: number
+        images: Array<HostedImage>
+    }
+
+    export interface ExtractedTexts{
+        page: number
+        text: string
+    }
+
+    export interface ExtractedContent{
+        page:number
+        images: Array<HostedImage>
+        text: string
+    }
+}
