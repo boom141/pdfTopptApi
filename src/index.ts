@@ -14,8 +14,10 @@ app.get('/', (c) => {
   return c.text('Hello Hono!')
 })
 
+
 app.post('/fileInfo',  appController.fileInfo)
-app.post('/extractContent', appController.extractFromFile)
+app.get('/extractImages', appController.extractImages)
+app.get('/extractTexts', appController.extractTexts)
 
 // app.get('/elements', async (c) => {
 //   try {

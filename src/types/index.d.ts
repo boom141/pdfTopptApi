@@ -40,7 +40,7 @@ export declare namespace SlideData{
 }
 
 export declare namespace ResponseHelper{
-    export type ResposeDataType = Array<any> | object | string | number
+    export type ResposeDataType = Array<any> | object | string | number | null
 
     export interface SuccessResponse {
         success: boolean,
