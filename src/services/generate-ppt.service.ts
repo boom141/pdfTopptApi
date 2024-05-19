@@ -31,6 +31,6 @@ export const exportPPT = async (slidesData: Array<SlideData.Slide>) => {
     await Promise.all(slidePromises);
 
     // Write the presentation file
-    newPpt.writeFile({ fileName: 'src/data/temp/downloadable/result_presentation.pptx' });
+    return await newPpt.writeFile({ fileName: `src/data/temp/downloadable/result-${Math.floor(Math.random() * (10000 - 1000) + 1) + 1000 }.pptx` });
 }
 

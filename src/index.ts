@@ -4,9 +4,7 @@ import { Hono } from 'hono'
 import { cors } from 'hono/cors'
 import { exportPPT } from './services/generate-ppt.service'
 import AppController from './controllers/index.controller'
-import {createReadStream, readFile} from 'fs'
-
-import { stream, streamText, streamSSE } from 'hono/streaming'
+import { readFile, unlink} from 'fs'
 import { promisify } from 'util'
 import { apiSuccessResponse } from './helpers/response.helper'
 
@@ -39,13 +37,17 @@ app.get('/extractTexts', appController.extractTexts)
 // })
 
 const readFileAsync = promisify(readFile) // Specify the path to your file
+const removeFileAsync = promisify(unlink)
 app.post('/export', async(c) => {
   let requestData = await c.req.json()
-  await exportPPT(requestData.data)
 
-  const filePath = 'src/data/temp/downloadable/result_presentation.pptx';
+
+  const filePath = await exportPPT(requestData.data)
+  console.log(filePath)
   const fileData = await readFileAsync(filePath) 
-  return c.json(apiSuccessResponse(fileData.toString('base64'), 'sucess'))
+  const removedFile = await removeFileAsync(filePath)
+  const base64Data = fileData.toString('base64');
+  return c.json(apiSuccessResponse(base64Data, 'success'))
 })
 
 app.get('/sample', c => c.text('Sample'))
