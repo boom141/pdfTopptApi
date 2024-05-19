@@ -60,7 +60,7 @@ class FileParsingService {
             if(tracker <= pageLimit){
               let fileBuffer = await readFileAsync(this.tempDist + `/${image.name}.png`);
               const hostImageData = await this.hostImage(fileBuffer, image.name);
-              images.push({ name: hostImageData.name, url: hostImageData.url, thumbnailUrl: hostImageData.thumbnailUrl });
+              images.push({page: tracker + 1,  name: hostImageData.name, url: hostImageData.url, thumbnailUrl: hostImageData.thumbnailUrl });
             }
             await removeFileAsync(this.tempDist + `/${image.name}.png`);
         }));
@@ -73,29 +73,18 @@ class FileParsingService {
 
   extractTexts = async (pageLimit: number): Promise<Array<Parsing.ExtractedTexts> | any> =>{  
     const perPageData = await this.textExtractor.extract(this.uploadedFile, {lastPage: pageLimit})
-    let texts:Array<Parsing.ExtractedTexts> = []
-    for(const page of perPageData.pages){
-       const textData = await this.parseText(page.content)
-       texts.push({page: page.pageInfo.num, text: textData})
+    try{
+      let texts:Array<Parsing.ExtractedTexts> = []
+      for(const page of perPageData.pages){
+        const textData = await this.parseText(page.content)
+        texts.push({page: page.pageInfo.num, text: textData})
+      }
+      return texts
+    }catch(error){
+      return error
     }
-    return texts
   }
-
-  // extractContent = async (pageLimit: number): Promise<Array<Parsing.ExtractedContent>> => {
-  //   let content: Array<Parsing.ExtractedContent> = []
-  //   const imageData:Array<Parsing.ExtractedImages> = await this.extractImages(pageLimit)
-  //   // const textData:Array<Parsing.ExtractedTexts> = await this.extractTexts(pageLimit)
-
-  //   console.log(imageData)
-  //   // console.log(textData)
-
-  //   // for(let i = 0; i < pageLimit; i++){
-  //   //   content.push({page: i + 1, images: imageData[i].images, text: textData[i].text})
-  //   // }
-
-  //   // console.log(content)
-  //   return content
-  // }
 }
+
 
 export default FileParsingService

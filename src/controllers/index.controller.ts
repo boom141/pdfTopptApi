@@ -31,10 +31,9 @@ class AppController{
     }
 
     extractTexts = async (c: Context): Promise<ResponseHelper.RequestResponse> =>{
+        const queryParams: any = c.req.query()
+        const pdfImages = await this.fileParsing.extractTexts(queryParams.pageLimit as number)
         try{
-            const queryParams: any = c.req.query()
-            const pdfImages = await this.fileParsing.extractTexts(queryParams.pageLimit as number)
-            console.log(pdfImages)
             return c.json(apiSuccessResponse(pdfImages, API_RESPONSE_MESSAGE.SUCCESS))
         }catch(e: any){
             return c.json(apiErrorResponse(API_RESPONSE_MESSAGE.ERROR))

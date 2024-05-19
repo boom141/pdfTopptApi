@@ -9,11 +9,17 @@ export declare namespace SlideData{
         fontFamily: string,
         fontWeight: string,
         fontSize: number,
+        scaleX: number,
+        scaleY: number,
         cursorColor: string,
         left: number,
         top: number,
         fill: string,
-        angle: number
+        angle: number,
+        width: number,
+        height: number
+        textAlign: 'left' | 'center' | 'right' | 'justify'
+
     }
 
     export interface ImageProps extends SlideObject {
@@ -40,7 +46,7 @@ export declare namespace SlideData{
 }
 
 export declare namespace ResponseHelper{
-    export type ResposeDataType = Array<any> | object | string | number | null
+    export type ResposeDataType = Array<any> | object | string | number | null | any
 
     export interface SuccessResponse {
         success: boolean,
@@ -60,6 +66,7 @@ export declare namespace ResponseHelper{
 
 export declare namespace Parsing{
     export interface HostedImage {
+        page: number
         name: string
         url: string
         thumbnailUrl: string
