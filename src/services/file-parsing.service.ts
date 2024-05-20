@@ -9,6 +9,7 @@ import sharp from 'sharp'
 import Path from 'node:path';
 import { exportImages } from 'pdf-export-images'
 import { promisify } from 'util';
+import { text } from 'stream/consumers';
 
 const readFileAsync = promisify(readFile)
 const removeFileAsync = promisify(unlink)
@@ -38,13 +39,26 @@ class FileParsingService {
   }
 
   parseText = async (pageTexts: Array<any>): Promise<string> => {
-    let textContent = ''
+    let textContent:any = ''
     pageTexts.forEach(text => {
       textContent += text.str
     })
-    
-    textContent = await summarize({input: textContent, openAiApiKey: process.env.OPENAI_API_KEY as string})
-    return textContent
+
+    textContent = await fetch("https://api.ai21.com/studio/v1/summarize", {
+      headers: {
+        "Authorization": `Bearer ${process.env.SUMMARIZER_KEY}`,
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+          "source": textContent,
+          "sourceType": "TEXT",
+        }),
+      method: "POST"
+    });
+
+    const result = await textContent.json()
+
+    return result.summary
   }
 
 
