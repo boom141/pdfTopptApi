@@ -10,6 +10,8 @@ import Path from 'node:path';
 import { exportImages } from 'pdf-export-images'
 import { promisify } from 'util';
 import { text } from 'stream/consumers';
+import { PdfReader } from "pdfreader";
+import ConvertApi from 'convertapi-js'
 
 const readFileAsync = promisify(readFile)
 const removeFileAsync = promisify(unlink)
@@ -63,35 +65,57 @@ class FileParsingService {
 
 
 
-  extractImages = async (pageLimit: number): Promise<Array<Parsing.HostedImage> | any> => {
+  extractImages = async (): Promise<Array<Parsing.HostedImage> | any> => {
     let images: Array<Parsing.HostedImage> = [];
-
     try {
         const rawImages: any = await exportImages(this.uploadedFile, 'src/data/temp');
 
         await Promise.all(rawImages.map(async (image: any) => {
-            let tracker = Number(image.name.split('_')[1].split('p')[1])
-            if(tracker <= pageLimit){
+              let tracker = Number(image.name.split('_')[1].split('p')[1])
               let fileBuffer = await readFileAsync(this.tempDist + `/${image.name}.png`);
               const hostImageData = await this.hostImage(fileBuffer, image.name);
               images.push({page: tracker + 1,  name: hostImageData.name, url: hostImageData.url, thumbnailUrl: hostImageData.thumbnailUrl });
-            }
+          
             await removeFileAsync(this.tempDist + `/${image.name}.png`);
         }));
 
-        return images;
+        
+        const groupedImages:any = {};
+
+
+        images.forEach(image => {
+          if (groupedImages.hasOwnProperty(image.page)) {
+            groupedImages[image.page].push({
+              name: image.name,
+              url: image.url
+            });
+          } else {
+            groupedImages[image.page] = [{
+              name: image.name,
+              url: image.url
+            }];
+          }
+        });
+        const groupedImagesArray = Object.entries(groupedImages).map(([page, images]) => ({
+          page: page,
+          images: images
+        }));
+
+        return groupedImagesArray;
     } catch (error) {
         return error; 
     }
 }
 
-  extractTexts = async (pageLimit: number): Promise<Array<Parsing.ExtractedTexts> | any> =>{  
-    const perPageData = await this.textExtractor.extract(this.uploadedFile, {lastPage: pageLimit})
+  extractTexts = async (): Promise<Array<Parsing.ExtractedTexts> | any> =>{  
+    const perPageData = await this.textExtractor.extract(this.uploadedFile)
     try{
       let texts:Array<Parsing.ExtractedTexts> = []
       for(const page of perPageData.pages){
         const textData = await this.parseText(page.content)
-        texts.push({page: page.pageInfo.num, text: textData})
+        if(textData !== undefined){
+          texts.push({page: page.pageInfo.num, text: textData})
+        }
       }
       return texts
     }catch(error){
