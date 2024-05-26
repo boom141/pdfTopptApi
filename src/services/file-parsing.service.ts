@@ -1,17 +1,13 @@
 import 'dotenv/config'
 import { PDFExtract } from 'pdf.js-extract';
-import { summarize } from "@ebereplenty/summarize";
-import { unlinkSync, readFileSync, writeFile, writeFileSync, unlink, readFile } from 'fs'
+import { writeFileSync, unlink, readFile } from 'fs'
 import { imagekit } from './image-kit.service'
-import { getDocument, OPS } from 'pdfjs-dist';
+import { getDocument } from 'pdfjs-dist';
 import { Parsing } from '../types';
-import sharp from 'sharp'
-import Path from 'node:path';
+
 import { exportImages } from 'pdf-export-images'
 import { promisify } from 'util';
-import { text } from 'stream/consumers';
-import { PdfReader } from "pdfreader";
-import ConvertApi from 'convertapi-js'
+
 
 const readFileAsync = promisify(readFile)
 const removeFileAsync = promisify(unlink)
